@@ -1,0 +1,32 @@
+package classes;
+
+import java.io.File;
+import java.io.FileInputStream;
+
+import org.antlr.runtime.ANTLRInputStream;
+import org.antlr.runtime.CommonTokenStream;
+import org.antlr.runtime.tree.ParseTree;
+
+
+/**
+ * @author JBlad
+ *
+ */
+public class main {
+
+	public static void main(String[] args) {
+		System.setIn(new FileInputStream(new File("ejemplo.txt")));
+		
+		ANTLRInputStream input = new ANTLRInputStream(System.in);
+		
+		ipsumUNLexer lexer= new ipsumUNLexer(input);
+		CommonTokenStream tokens = new CommonTokenStream();
+		ipsumUNParser parser = new ipsumUNParser(tokens);
+		 ParseTree	tree =  parser.commands();
+		
+		config_visitor<Object> loader = new config_visitor<Object>();
+		loader.loader(tree);
+		
+	}
+
+}

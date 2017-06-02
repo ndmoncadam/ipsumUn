@@ -1,0 +1,194 @@
+grammar ipsumUN;
+programa 
+ : outmain* 'principal' comandos 'fin_principal' 
+ ;
+
+comandos
+ : sentencias*
+ ;
+
+sentencias
+ : declaracion 
+ | asignador 
+ | funcionSistema 
+ | funcionLeer 
+ | sentenciaIf 
+ | sentenciaWhile 
+ | sentenciaFor
+ | optimizar 
+ ;
+
+outmain
+ : funcionX
+ ;
+
+funcionX 
+ : FUNCION ID PARENTIZ parametros PARENTDER funcionBloque
+ ;
+
+parametros
+ : (TIPOS ID)* (COMA TIPOS ID)*
+ ;
+
+funcionBloque
+ : CORCHETEIZ comandos RETORNAR expresion PUNTOYCOMA CORCHETEDER
+ ;
+
+parametrosCall
+ : expresion* (COMA expresion)*
+ ;
+
+optimizar
+ : CORCHETEIZ (MAXIMIZAR | MINIMIZAR)  funcionObjetivo   restricciones CORCHETEDER
+ ; 
+
+funcionObjetivo
+ : (MENOS)? (ENTERO | REAL)ID? ((MENOS|MAS) (ENTERO | REAL) (ID)?)*  IGUAL '0' PUNTOYCOMA
+ ;
+
+restricciones
+ : 'Restricciones' CORCHETEIZ restric+   CORCHETEDER PUNTOYCOMA
+ ;
+
+restric
+ : ((MENOS)? (ENTERO | REAL)ID? ((MENOS|MAS) (ENTERO | REAL) (ID)?)*  operadores) (ENTERO|REAL)? PUNTOYCOMA
+ ;
+ 
+ operadores
+  : (MAYORIGUAL|MAYOR|MENOR|MENORIGUAL|IGUAL) 
+  ; 
+
+declaracion
+ : TIPOS ID PUNTOYCOMA
+ ;
+ 
+asignador
+ : TIPOS ID IGUAL expresion PUNTOYCOMA 
+ | ID IGUAL expresion PUNTOYCOMA
+ ;
+ 
+funcionSistema
+ : IMPRIMIR PARENTIZ expresion PARENTDER PUNTOYCOMA
+ ;
+
+funcionLeer
+ : LEER PARENTIZ ID COMA TIPOS PARENTDER PUNTOYCOMA
+ ;
+
+condiciones
+ : PARENTIZ expresion PARENTDER sentenciasBloque
+ ;
+ 
+sentenciasBloque
+ : CORCHETEIZ comandos CORCHETEDER | sentencias
+ ;
+ 
+sentenciaIf
+ : SI condiciones (SINO_SI condiciones)* (SINO sentenciasBloque)?
+ ;
+ 
+sentenciaWhile
+ : MIENTRAS PARENTIZ expresion PARENTDER sentenciasBloque
+ ;
+ 
+sentenciaFor
+ : PARA PARENTIZ asignador expresion PUNTOYCOMA REAL PARENTDER sentenciasBloque
+ ;
+
+arreglos
+ : TIPOS ID IGUAL LLAVEIZ atomic* (',' atomic)* LLAVEDER PUNTOYCOMA
+ ;
+
+expresion
+: MENOS expresion                           										#unaryMinusExpr
+ | NOT expresion                            										#notExpr
+ | expresion op=(MULT | DIV | MOD) expresion      									#multiplicationExpr
+ | expresion op=(MAS | MENOS) expresion          									#additiveExpr
+ | expresion op=(MENORIGUAL | MAYORIGUAL | MENOR | MAYOR) expresion 					#relationalExpr
+ | expresion op=(IGUALDAD | DIFERENTE) expresion   									#equalityExpr
+ | opt=(MIN | MAX) PARENTIZ expresion COMA expresion PARENTDER  					#twoparamExpr
+ | opt=(TECHO | PISO | SQRT | ABS | LOG | LOG10) PARENTIZ expresion PARENTDER  		#mathfuncExpr
+ | ID PARENTIZ parametrosCall PARENTDER												#callfuncExpr
+ | expresion AND expresion                        									#andExpr
+ | expresion OR expresion                         									#orExpr
+ | <assoc=right> expresion POTEN expresion											#powExpr
+ | ID PUNTO ID																		#structExpr
+ | atomic                                 											#atomExpr 
+ ;
+ 
+atomic 
+ :	PARENTIZ expresion PARENTDER       #parExpr
+ |	ENTERO 								#integerAtom
+ |  REAL  								#floatAtom
+ |	BOOLEANO 							#booleanAtom
+ |	ID             						#idAtom
+ |	CARACTER							#charAtom
+ |	CADENA 	        					#stringAtom
+ | 	VACIO								#nullAtom
+ ;
+
+COMENTARIOS 		: '/*' .*? '*/' -> skip ;
+LINEA_COMENTARIOS 	: '//' ~[\r\n]*  ->  skip ;
+
+TIPOS 			: 'booleano' | 'entero' | 'real' | 'cadena' | 'caracter' ; 
+BREAK			: 'romper' ; 
+VACIO			: 'nulo' ;
+REAL 			: [0-9]*[.][0-9]+ ;
+BOOLEANO		: 'verdadero' | 'falso' ;
+ENTERO 			: [0-9]+ ; 
+CADENA 			: '"' (~["\r\n] | '""')* '"' ;
+CARACTER 		: [']~[']['] ;
+MAS			    : '+' ;
+MENOS			: '-' ;
+MULT			: '*' ;
+DIV 			: '/' ;
+MOD 			: '%' ;
+POTEN 			: '^' ;
+MAYOR 			: '>' ;
+MAYORIGUAL 		: '>=' ;
+MENOR 			: '<' ;
+MENORIGUAL 		: '<=' ;
+IGUALDAD	 	: '==' ;
+DIFERENTE		: '!=' ;
+IGUAL 			: '=' ;
+FLECHA 			: '->' ;
+DOSPUNTOS		: ':' ;
+PUNTOYCOMA		: ';' ;
+PARENTIZ 		: '(' ;
+PARENTDER 		: ')' ;
+CORCHETEIZ 		: '{' ;
+CORCHETEDER 		: '}' ;
+LLAVEIZ			: '[' ;
+LLAVEDER		: ']' ;
+PUNTO			: '.' ;
+OR 				: '||' ;
+AND 			: '&&' ;
+NOT				: '!' ;
+COMA 			: ',' ;
+
+MAXIMIZAR		: 'maximizar';
+MINIMIZAR		: 'minimizar';
+
+
+IMPRIMIR		: 'imprimir';
+LEER			: 'leer';
+SI				: 'si';
+ENTONCES			: 'entonces';
+SINO_SI			: 'sino_si' ;
+SINO			: 'si_no';
+PARA				: 'para' ;
+MIENTRAS			: 'mientras' ;
+HACER				: 'hacer' ;
+FUNCION		: 'funcion' ;
+RETORNAR			: 'devolver';
+MIN				: 'min' ;
+MAX				: 'max' ;
+TECHO			: 'techo' ;
+PISO			: 'piso' ;
+SQRT			: 'raiz2' ;
+ABS				: 'abs' ;
+LOG				: 'log' ;
+LOG10			: 'log10' ;
+ID 				: [a-zA-Z][a-zA-Z0-9_]* ;
+WS				: [ \t\r\n]+ -> skip
+;
