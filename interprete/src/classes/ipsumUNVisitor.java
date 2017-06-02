@@ -11,6 +11,12 @@ import org.antlr.v4.runtime.tree.ParseTreeVisitor;
  */
 public interface ipsumUNVisitor<T> extends ParseTreeVisitor<T> {
 	/**
+	 * Visit a parse tree produced by {@link ipsumUNParser#principal}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPrincipal(ipsumUNParser.PrincipalContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link ipsumUNParser#commands}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

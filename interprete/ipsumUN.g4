@@ -1,5 +1,8 @@
 grammar ipsumUN;		
 
+principal 	: ID '{' commands '}'
+		  	;
+
 commands	: command commands
 			| EOF
 			|

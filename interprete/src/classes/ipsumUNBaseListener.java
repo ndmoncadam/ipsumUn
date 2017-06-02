@@ -16,6 +16,18 @@ public class ipsumUNBaseListener implements ipsumUNListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterPrincipal(ipsumUNParser.PrincipalContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitPrincipal(ipsumUNParser.PrincipalContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterCommands(ipsumUNParser.CommandsContext ctx) { }
 	/**
 	 * {@inheritDoc}

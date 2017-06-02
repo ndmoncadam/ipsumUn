@@ -8,6 +8,16 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
  */
 public interface ipsumUNListener extends ParseTreeListener {
 	/**
+	 * Enter a parse tree produced by {@link ipsumUNParser#principal}.
+	 * @param ctx the parse tree
+	 */
+	void enterPrincipal(ipsumUNParser.PrincipalContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link ipsumUNParser#principal}.
+	 * @param ctx the parse tree
+	 */
+	void exitPrincipal(ipsumUNParser.PrincipalContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link ipsumUNParser#commands}.
 	 * @param ctx the parse tree
 	 */

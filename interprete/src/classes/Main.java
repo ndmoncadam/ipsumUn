@@ -14,13 +14,16 @@ import org.antlr.v4.runtime.tree.*;
  *
  */
 public class Main {
+	
+	    public static String principal;
+	
 	public static void main(String[] args) throws Exception {
 		System.setIn(new FileInputStream(new File("ejemplo.txt")));
 		ANTLRInputStream input = new ANTLRInputStream(System.in);
 		ipsumUNLexer lexer= new ipsumUNLexer(input);
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 		ipsumUNParser parser = new ipsumUNParser(tokens);
-		ParseTree	tree =  parser.commands();
+		ParseTree	tree =  parser.principal();
 		
 		config_visitor<Object> loader = new config_visitor<Object>();
 		loader.visit(tree);

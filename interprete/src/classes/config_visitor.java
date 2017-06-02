@@ -3,10 +3,7 @@ package classes;
 import java.util.HashMap;
 
 
-import classes.ipsumUNParser.RepeatContext;
-import classes.ipsumUNParser.ConditionalContext;
-import classes.ipsumUNParser.CommandContext;
-import classes.ipsumUNParser.ExprContext;
+import classes.ipsumUNParser.*;
 
 
 
@@ -19,6 +16,15 @@ public class config_visitor <T> extends ipsumUNBaseVisitor<T>  {
 		}
 		return null;
 	}
+	
+	@Override
+	public T visitPrincipal(PrincipalContext ctx){
+		Main.principal =ctx.ID().getText();
+		System.out.println(ctx.ID().getText());
+		CommandsContext aux=ctx.commands();
+		return visitCommands(aux);
+	}
+	
 	
 	
 	@Override
