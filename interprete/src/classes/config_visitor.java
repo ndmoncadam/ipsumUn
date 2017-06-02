@@ -1,4 +1,3 @@
-
 package classes;
 import java.util.HashMap;
 
@@ -9,26 +8,27 @@ import classes.ipsumUNParser.*;
 
 public class config_visitor <T> extends ipsumUNBaseVisitor<T>  {
 	@Override
-	public T visitRepeat(RepeatContext ctx) {
+	public T visitRepetiv(RepetivContext ctx) {
 		int times = (int)(double)(Double) visitExpr(ctx.expr());
 		for (int i = 0; i < times; i++) {
-			visitCommands(ctx.commands());
+			visitComandos(ctx.comandos());
 		}
 		return null;
 	}
+	
 	
 	@Override
 	public T visitPrincipal(PrincipalContext ctx){
 		Main.principal =ctx.ID().getText();
 		System.out.println(ctx.ID().getText());
-		CommandsContext aux=ctx.commands();
-		return visitCommands(aux);
+		ComandosContext aux=ctx.comandos();
+		return visitComandos(aux);
 	}
 	
 	
 	
 	@Override
-	public T visitConditional(ConditionalContext ctx) {
+	public T visitCondicional(CondicionalContext ctx) {
 		String op = ctx.ROP().getText();
 		//System.out.println("el valor de op es: ");
 		//System.out.println(op);
@@ -58,7 +58,7 @@ public class config_visitor <T> extends ipsumUNBaseVisitor<T>  {
 			break;
 		}
 		if (ans){
-			visitCommands(ctx.commands());
+			visitComandos(ctx.comandos());
 		}
 		return null;
 	}
@@ -66,9 +66,9 @@ public class config_visitor <T> extends ipsumUNBaseVisitor<T>  {
 			HashMap<String, Object> tablasimbolos = new HashMap<>();
 			
 	@Override
-	public T visitCommand(CommandContext ctx) {
-		if (ctx.printexpr() != null){
-			Double ans = (Double)visitExpr(ctx.printexpr().expr());
+	public T visitComando(ComandoContext ctx) {
+		if (ctx.impriexpr() != null){
+			Double ans = (Double)visitExpr(ctx.impriexpr().expr());
 			int aux = (int)Math.floor(ans);
 			
 			if(ans - aux <1e-9){
@@ -76,7 +76,7 @@ public class config_visitor <T> extends ipsumUNBaseVisitor<T>  {
 			}else{
 				System.out.println(ans);
 			}
-		}else if(ctx.VAR() != null){
+		}else if(ctx.DEFINIR() != null){
 			String name = ctx.ID().getText();
 			if(tablasimbolos.get(name) != null){
 				int line = ctx.ID().getSymbol().getLine();
@@ -89,7 +89,7 @@ public class config_visitor <T> extends ipsumUNBaseVisitor<T>  {
 		}else {
 			return visitChildren(ctx);
 		}
-		return super.visitCommand(ctx);
+		return super.visitComando(ctx);
 	}
 	@Override
 	public T visitExpr(ExprContext ctx) {
@@ -105,7 +105,7 @@ public class config_visitor <T> extends ipsumUNBaseVisitor<T>  {
 			if ((value=tablasimbolos.get(name)) == 	null) {
 				int line = ctx.ID().getSymbol().getLine();
 				int col = ctx.ID().getSymbol().getCharPositionInLine()+1;
-				//podría ser en .out tambien
+				//podrÃ­a ser en .out tambien
 				System.err.printf("<%d:%d> Error semantico, la variable con nombre \"" +name+"\" ya fue declarada.\n",line,col);
 				System.exit(-1);
 				return null;
@@ -141,4 +141,5 @@ public class config_visitor <T> extends ipsumUNBaseVisitor<T>  {
 	
 	
 }
+
 
