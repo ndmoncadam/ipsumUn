@@ -15,20 +15,24 @@ comando 	: condicional
 			| optimizar
 			;
 
-optimizar :  '{' (fun_obj)+ sujeto  restricciones* '}'
+optimizar :  '{' (fun_obj)+ sujeto   '}'
 				;
 
 fun_obj
-  :  (op)+  ('-')?   (DOUBLE)?    ID    ('+'|'-')?   (DOUBLE)?   ID  '='   '0'   ';'
+  :  (op)+   parametro*  IGUAL   (MENOS)? DOUBLE   PTOCOMA
   ;
+parametro: (MAS|MENOS)?   (DOUBLE)?   ID
+;
+
   
   op : 'MAXIMIZAR'
   	   | 'MINIMIZAR'
+  	   | 'SUJETO'
   	   ;
-sujeto: 'SUJETO' restricciones *;
+sujeto: op restricciones *;
   	   
 restricciones
-  :  ('-')?   (DOUBLE)?    ID    (('+'|'-')?   (DOUBLE)?   ID )* ROP   DOUBLE   ';'
+  : parametro* ROP  (MAS|MENOS)?  DOUBLE   ';'
   ;
   
 
@@ -38,7 +42,8 @@ repetiv		: 'repetir' expr 'veces' comandos 'fin_repetir';
 impriexpr	: 'imprimir' expr PTOCOMA ;
 
 expr:	expr MULOP expr
-    |	expr SUMOP expr
+    |	expr MAS expr
+    |	expr MENOS expr
     |	DOUBLE
     |	PIZQ expr PDER
     | 	ID
@@ -53,7 +58,9 @@ PDER	: ')' ;
 ROP		: ( '<' | '<=' | '>=' | '>' | '==' | '!=' ) ;
 PTOCOMA : ';' ;
 MULOP	: ( '*' | '/' );
-SUMOP	: ('+' | '-') ;
+MAS: '+';
+MENOS: '-';
+IGUAL:'=';
+
 DOUBLE	: [0-9]+( | [.][0-9]+);
 ID 		: [a-zA-Z][a-zA-Z0-9_]* ;
-
